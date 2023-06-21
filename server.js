@@ -1,11 +1,9 @@
-di// Import required modules
+// Import required modules
 const express = require('express');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const axios = require('axios');
 const cors = require('cors');
-
-
 
 // Create an instance of the Express application
 const app = express();
