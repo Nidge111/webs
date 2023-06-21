@@ -164,7 +164,7 @@ app.get('/profile', (req, res) => {
   
   // Use the connection pool to perform database operations
   pool.query(
-    'SELECT username, bio, socialMediaLink1, socialMediaLink2 FROM profiles WHERE email = ?',
+    'SELECT username, bio, socialMediaLink1, socialMediaLink2 FROM profiles WHERE emai = ?',
     [email],
     (error, results) => {
       if (error) {
@@ -189,7 +189,7 @@ app.put('/profile', (req, res) => {
 
   // Use the connection pool to perform database operations
   pool.query(
-    'UPDATE profiles SET bio = ?, socialMediaLink1 = ?, socialMediaLink2 = ? WHERE email = ?',
+    'UPDATE profiles SET bio = ?, socialMediaLink1 = ?, socialMediaLink2 = ? WHERE username = ?',
     [bio, socialMediaLink1, socialMediaLink2, email],
     (error) => {
       if (error) {
