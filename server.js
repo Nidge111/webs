@@ -5,7 +5,7 @@ const db = mysql.createConnection({
   poet: '3306',
   user: 'root',
   password: 'password',
-  database: '-',
+  database: '',
 });
 
 db.connect((err) => {
