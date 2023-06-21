@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const axios = require('axios');
 const cors = require('cors');
+const bcrypt = require('bcrypt');
 
 // Create an instance of the Express application
 const app = express();
@@ -70,32 +71,41 @@ app.post('/signup', (req, res) => {
               return;
             }
 
-            // Email and username don't exist, proceed with user registration
-            pool.query(
-              'INSERT INTO users (username, first_Name, last_Name, dob, email, password, pronouns) VALUES (?, ?, ?, ?, ?, ?,?)',
-              [username, firstName, lastName, dob, email, password, pronouns],
-              (error, results) => {
-                if (error) {
-                  console.error('Database connection error:', error);
-                  res.status(500).json({ message: 'An error occurred while saving the user data' });
-                  return;
-                }
-
-                pool.query(
-                  'INSERT INTO profiles (username, bio, socialMediaLink1, socialMediaLink2, email) VALUES (?, ?, ?, ?, ?)',
-                  [username, null, null, null, email],
-                  (error, results) => {
-                    if (error) {
-                      console.error('Database connection error:', error);
-                      res.status(500).json({ message: 'An error occurred while saving the user data' });
-                      return;
-                    }
-
-                    res.status(200).json({ message: 'Registration successful' });
-                  }
-                );
+            // Hash the password
+            bcrypt.hash(password, 10, (hashError, hashedPassword) => {
+              if (hashError) {
+                console.error('Error while hashing password:', hashError);
+                res.status(500).json({ message: 'An error occurred while hashing the password' });
+                return;
               }
-            );
+
+              // Email and username don't exist, proceed with user registration
+              pool.query(
+                'INSERT INTO users (username, first_Name, last_Name, dob, email, password, pronouns) VALUES (?, ?, ?, ?, ?, ?, ?)',
+                [username, firstName, lastName, dob, email, hashedPassword, pronouns],
+                (error, results) => {
+                  if (error) {
+                    console.error('Database connection error:', error);
+                    res.status(500).json({ message: 'An error occurred while saving the user data' });
+                    return;
+                  }
+
+                  pool.query(
+                    'INSERT INTO profiles (username, bio, socialMediaLink1, socialMediaLink2, email) VALUES (?, ?, ?, ?, ?)',
+                    [username, null, null, null, email],
+                    (error, results) => {
+                      if (error) {
+                        console.error('Database connection error:', error);
+                        res.status(500).json({ message: 'An error occurred while saving the user data' });
+                        return;
+                      }
+
+                      res.status(200).json({ message: 'Registration successful' });
+                    }
+                  );
+                }
+              );
+            });
           }
         );
       }
@@ -145,17 +155,26 @@ app.post('/verifyPassword', (req, res) => {
 
       if (results.length > 0) {
         const user = results[0];
-        if (user.password === password) {
-          res.status(200).json({ message: 'Password matches' });
-        } else {
-          res.status(401).json({ message: 'Password does not match' });
-        }
+        bcrypt.compare(password, user.password, (compareError, passwordMatch) => {
+          if (compareError) {
+            console.error('Error while comparing passwords:', compareError);
+            res.status(500).json({ message: 'An error occurred while verifying the password' });
+            return;
+          }
+
+          if (passwordMatch) {
+            res.status(200).json({ message: 'Password matches' });
+          } else {
+            res.status(401).json({ message: 'Password does not match' });
+          }
+        });
       } else {
         res.status(404).json({ message: 'Username does not exist' });
       }
     }
   );
 });
+
 
 app.get('/profile', (req, res) => {
   const { email } = req.query;
