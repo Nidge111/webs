@@ -162,7 +162,7 @@ app.get('/profile', (req, res) => {
   
   // Use the connection pool to perform database operations
   pool.query(
-    'SELECT username, bio, socialMediaLink1, socialMediaLink2 FROM profiles WHERE emai = ?',
+    'SELECT username, bio, socialMediaLink1, socialMediaLink2 FROM profiles WHERE email = ?',
     [email],
     (error, results) => {
       if (error) {
