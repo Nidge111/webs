@@ -3,6 +3,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const axios = require('axios');
+const cors = require('cors');
+
+
 
 // Create an instance of the Express application
 const app = express();
@@ -19,6 +22,7 @@ app.use((req, res, next) => {
 
 // Configure middleware to parse JSON requests
 app.use(bodyParser.json());
+app.use(cors());
 
 // Create a connection pool
 const pool = mysql.createPool({
