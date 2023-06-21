@@ -26,7 +26,7 @@ const pool = mysql.createPool({
   poet: '3306',
   user: 'root',
   password: 'password',
-  database: '',
+  database: 'userdata',
 });
 
 app.post('/signup', (req, res) => {
