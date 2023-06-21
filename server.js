@@ -1,4 +1,4 @@
-// Import required modules
+di// Import required modules
 const express = require('express');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
@@ -184,7 +184,7 @@ app.get('/profile', (req, res) => {
   );
 });
 
-app.put('/profile', (req, res) => {
+app.put('/profile/edit', (req, res) => {
   const { email, username, bio, socialMediaLink1, socialMediaLink2 } = req.body;
 
   // Use the connection pool to perform database operations
