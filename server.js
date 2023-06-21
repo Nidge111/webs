@@ -184,12 +184,12 @@ app.get('/profile', (req, res) => {
   );
 });
 
-app.put('/profile/edit', (req, res) => {
+app.put('/profile', (req, res) => {
   const { email, username, bio, socialMediaLink1, socialMediaLink2 } = req.body;
 
   // Use the connection pool to perform database operations
   pool.query(
-    'UPDATE profiles SET bio = ?, socialMediaLink1 = ?, socialMediaLink2 = ? WHERE username = ?',
+    'SELECT username, bio, socialMediaLink1, socialMediaLink2 FROM profiles WHERE email = ?',
     [bio, socialMediaLink1, socialMediaLink2, email],
     (error) => {
       if (error) {
