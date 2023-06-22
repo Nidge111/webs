@@ -11,7 +11,7 @@ const app = express();
 
 // Enable CORS
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'http://immagiveitago.s3-website.eu-north-1.amazonaws.com/'); // Replace with your Angular app's URL
+  res.setHeader('Access-Control-Allow-Origin', 'https://vrsocialnexus.com/'); // Replace with your Angular app's URL
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   res.setHeader('Access-Control-Allow-Credentials', true);
