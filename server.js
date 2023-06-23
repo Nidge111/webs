@@ -1,17 +1,14 @@
-// Import required modules
 const express = require('express');
 const bodyParser = require('body-parser');
-const mysql = require('mysql');
 const axios = require('axios');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 
-// Create an instance of the Express application
 const app = express();
+const PORT = 3000;
 
-// Enable CORS
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://vrsocialnexus.com/'); // Replace with your Angular app's URL
+  res.setHeader('Access-Control-Allow-Origin', 'https://vrsocialnexus.com'); // Replace with your Angular app's URL
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -19,18 +16,62 @@ app.use((req, res, next) => {
   next();
 });
 
-// Configure middleware to parse JSON requests
 app.use(bodyParser.json());
 app.use(cors());
 
-// Create a connection pool
+
+app.all('/api/*', async (req, res) => {
+  try {
+    const { method, originalUrl, body, query, params, headers } = req;
+
+    const backendUrl = 'http://localhost:3000'; // Replace with the actual backend server URL
+
+    const response = await axios({
+      method,
+      url: `${backendUrl}${originalUrl}`,
+      data: body,
+      params: query,
+      headers: {
+        ...headers,
+        'Access-Control-Allow-Origin': '*', // Allow requests from any origin (adjust as needed)
+      },
+    });
+
+    res.status(response.status).json(response.data);
+  } catch (error) {
+    console.error('Proxy error:', error);
+    res.status(500).json({ message: 'An error occurred while proxying the request' });
+  }
+});
+
+app.get('/proxy', (req, res) => {
+  const url = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3385008803778056';
+
+  // Make a request to the remote resource using the 'request' library
+  request.get(url, (error, response, body) => {
+    if (error) {
+      // Handle any error that occurs during the request
+      res.status(500).send('Error occurred while making the request');
+    } else if (response.statusCode !== 200) {
+      // Handle non-successful response status codes
+      res.status(response.statusCode).send('Failed to fetch the resource');
+    } else {
+      // Set appropriate headers and send the response body
+      res.header('Content-Type', 'application/javascript');
+      res.send(body);
+    }
+  });
+});
+
+
 const pool = mysql.createPool({
  host: 'website.codfvu1pgxsn.eu-north-1.rds.amazonaws.com',
-  poet: '3306',
+  port: '3306',
   user: 'root',
   password: 'password',
   database: 'userdata',
 });
+
 
 app.post('/signup', (req, res) => {
   try {
@@ -468,9 +509,11 @@ app.delete('/ads/delete', (req, res) => {
   );
 });
 
+const backport = 5000; // Choose a suitable port number
+app.listen(backport, () => {
+  console.log(`Server is running on port ${backport}`);
+});
 
-// Start the server
-const port = 3000; // Choose a suitable port number
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+app.listen(PORT, () => {
+  console.log(`Proxy server is running on port ${PORT}`);
 });
