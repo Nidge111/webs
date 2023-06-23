@@ -1,8 +1,11 @@
+// Import required modules
 const express = require('express');
 const bodyParser = require('body-parser');
+const mysql = require('mysql');
 const axios = require('axios');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
+
 
 const app = express();
 const PORT = 3000;
