@@ -9,7 +9,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 
-app.get('/api/', async (req, res) => {
+app.get('/.well-known/pki-validation/', async (req, res) => {
   try {
     console.log("Hello");
   } catch (error) {
