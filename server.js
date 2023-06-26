@@ -18,5 +18,3 @@ app.listen(PORT, () => {
   console.log(`Proxy server is running on port ${PORT}`);
 });
 
-
-http://16.16.117.214:3000/home/ec2-user/webs/11223558199E9123ED7987B4B399C906.txt
