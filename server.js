@@ -9,13 +9,8 @@ app.use(bodyParser.json());
 app.use(cors());
 
 
-app.get('/.well-known/pki-validation/', async (req, res) => {
-  try {
-    console.log("Hello");
-  } catch (error) {
-    console.error('Proxy error:', error);
-    res.status(500).json({ message: 'An error occurred while proxying the request' });
-  }
+app.get('/.well-known/pki-validation/11223558199E9123ED7987B4B399C906.txt', (req, res) => {
+    res.sendFile("/home/ec2-user/webs/11223558199E9123ED7987B4B399C906.txt")
 });
 
 app.listen(PORT, () => {
