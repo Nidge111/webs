@@ -220,6 +220,7 @@ app.put('/profile', (req, res) => {
 });
 
 app.get('/random-accounts', (req, res) => {
+  console.log("helloo");
   // Use the connection pool to perform database operations
   pool.query('SELECT username, bio, id FROM profiles ORDER BY RAND() LIMIT 5', (err, results) => {
     if (err) {
