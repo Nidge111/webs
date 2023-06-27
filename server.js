@@ -5,6 +5,9 @@ const mysql = require('mysql');
 const axios = require('axios');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
+const config = require('./config');
+
+const pool = mysql.createPool(config.dbConfig);
 
 const app = express();
 const PORT = 3000;
@@ -20,16 +23,6 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 app.use(cors());
-
-
-const pool = mysql.createPool({
- host: 'website.codfvu1pgxsn.eu-north-1.rds.amazonaws.com',
-  port: '3306',
-  user: 'root',
-  password: 'password',
-  database: 'userdata',
-});
-
 
 app.post('/signup', (req, res) => {
   try {
